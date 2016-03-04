@@ -1,0 +1,63 @@
+<html>
+<head>
+	<title>D3</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+	<p>hello</p>
+
+	<script>
+		//d3.select("p").text("hello world!");
+
+		var dataArray = [20, 40, 50, 60];  // this is called domain and the resulting range from this domain is called range .
+
+		var width = 500;
+		var height = 500; 
+
+		var widthScale = d3.scale.linear()
+						.domain([0, 60])   // tell to fetch the dat 	
+						.range([0, width]);	
+
+		var colorBar = d3.scale.linear()
+					 .domain([0, 60])
+					 .range(["red", "blue"]);	
+
+		var axis = d3.svg.axis()
+					.ticks(5)
+					.scale(widthScale);			 			
+
+
+		var canvas = d3.select("body")
+						.append("svg").attr("width", height).attr("height", width)
+						.append("g") // g is attribute for grouping
+						.attr("transform", "translate(50, 50)")
+						//.call(axis)
+						; 
+
+		var bars = canvas.selectAll("rect").data(dataArray).enter()
+				   .append("rect")
+
+				   .attr("width", function(d) {  // this function determines the width of each bar
+				   	return widthScale(d) // for each data in domain it will go into the scale and scale will produce new range and fit in the canvas
+				   	//return d *10;  //multiplying the dataset by 10 units
+				   } )
+
+				   .attr("height", 50)
+
+				   //.attr("fill", "red")  //OR can also be done using function
+
+				   .attr("fill", function(d) {
+				   	return colorBar(d)
+				   })
+
+
+				   .attr("y", function(d, i) {
+				   	return i * 100   //gap between the two bars
+				   });		
+
+		canvas.append("g")
+			   .attr("transform", "translate(0, 400)")
+			   .call(axis);		   			
+	</script>
+</body>
+</html>
